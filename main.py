@@ -1,34 +1,77 @@
 """
-Python script to help graphic designers
+
+A Python script to help graphic designers
 with arranging pages of a booklet so they 
 can be printed with backing and adjacent 
-pages in the right order. 
+pages in the right booklet order.
+
+v 0.1
+
+Author: Tawanda Terrence Nyamakope
+Github: @tntery
+X: @tntery21
+
 """
+
+def get_blank_pages_info_string(num_blank_pages: int) -> str:
+    """
+    Returns a string explaining the required number of blank pages.
+
+    @param:num_blank_pages - An intenger representing the number of blank pages.
+
+    """
+
+    return f"\nYou will need to add {num_blank_pages} more page(s) to your document or {num_blank_pages_to_add} blank page(s) at the end of your document so the booklet has enough pages to back each other out."
+
+def get_page_layout_heading_string(capitalize: bool = False) -> str:
+    """ 
+    Returns a string to use as an informative heading to explain how to interpret the proposed page layout info.
+    
+    @param:capitalize - A boolean to determine whether to capitalize the string or not.
+
+    """
+
+    heading_string = f"you can lay the following pages on the same sheet, one to the left and the other to the right (e.g 1 <-> 2 means page 1 to the left and page 2 to the right), then back that sheet with the '3 <-> 4' pages combination. \n\nBelow are your page combinations:\n"
+    if capitalize:
+        heading_string = f"\n{heading_string}"
+        return heading_string.title()
+    else:
+        return heading_string
 
 def arrange_pages(total_num_pages :int) -> str:
     """
     Returns nicely formatted page combination and backing information from the supplied total number of pages.
+
     @param:total_num_pages - total number of pages for the booklet.
+
     """
     pages_list = []
     for i in range(1, total_num_pages + 1):
         pages_list.append(i)
 
-    print("Pages list: ", pages_list)
-
     arrangement_string = ""
 
+    count = 0
+
     while len(pages_list) > 0:
-        arrangement_string += f"{pages_list[0]} <-> {pages_list[-1]}\n"
+        arrangement_string += f"|> {pages_list[0]} <|> {pages_list[-1]} <|\n"
         pages_list.remove(pages_list[0])
         pages_list.remove(pages_list[-1])
+        count += 1
+
+        if count % 2 == 0:
+            arrangement_string += "\n"
+
+        
 
     return arrangement_string
+
+
+# Get initial user input
 
 clean_num_pages = 0
 input_error = False
 
-# Ask user to enter number of pages
 while True:
 
     if input_error:
@@ -48,28 +91,35 @@ while True:
         input_error = True
         print("Exception", e)
 
-# Calculate and return results.
+# Compute and return results.
+        
 output_msgs_list = []
 total_inclusive_pages = 0
 
-    # For page total below 4
 if clean_num_pages < 4:
     total_inclusive_pages = 4
-    num_blank_pages = 4 - clean_num_pages
+    num_blank_pages_to_add = 4 - clean_num_pages
 
-    output_msgs_list.append(f"You will need to add {num_blank_pages} more page(s) to your document or {num_blank_pages} blank pages at the end of your document so the booklet has enough pages to back each other out.")
-    output_msgs_list.append("Having done that, you can lay the following pages on the same sheet (one to the left, one to the right, e.g 1 <-> 2), then back that sheet with the '3 <-> 4' pages combination. \n\nBelow are your page combinations:")
+    output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
+    output_msgs_list.append(f"\nHaving done that, {get_page_layout_heading_string()}")
     output_msgs_list.append(arrange_pages((total_inclusive_pages)))
 
+elif clean_num_pages == 4 or clean_num_pages % 4 == 0:
+    output_msgs_list.append(get_page_layout_heading_string(True))
+    output_msgs_list.append(arrange_pages((clean_num_pages)))
 else:
-    pass
+    num_extra_pages = clean_num_pages % 4
+    num_blank_pages_to_add = 4 - num_extra_pages
+    total_inclusive_pages = clean_num_pages + num_blank_pages_to_add
 
+    output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
+    output_msgs_list.append(f"Having done that, {get_page_layout_heading_string()}")
+    output_msgs_list.append(arrange_pages((total_inclusive_pages)))
+    
+
+# Output result
 for msg in output_msgs_list:
     print(msg)
 
-
-# If the result will include blank pages, present user with further options:
-    # Where they want the blank pages (at the begining, at the end)
-    # Whether they can get rid of a certain number of pages or not.
 
 input()
