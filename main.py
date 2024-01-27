@@ -13,6 +13,8 @@ X: @tntery21
 
 """
 
+import time
+
 def get_blank_pages_info_string(num_blank_pages: int) -> str:
     """
     Returns a string explaining the required number of blank pages.
@@ -21,7 +23,7 @@ def get_blank_pages_info_string(num_blank_pages: int) -> str:
 
     """
 
-    return f"\nYou will need to add {num_blank_pages} more page(s) to your document or {num_blank_pages_to_add} blank page(s) at the end of your document so the booklet has enough pages to back each other out."
+    return f"\nYou will need to add {num_blank_pages} more page(s) to your document or {num_blank_pages} blank page(s) at the end of your document so the booklet has enough pages to back each other out."
 
 def get_page_layout_heading_string(capitalize: bool = False) -> str:
     """ 
@@ -66,60 +68,72 @@ def arrange_pages(total_num_pages :int) -> str:
 
     return arrangement_string
 
+def main():
 
-# Get initial user input
+    # Get initial user input
 
-clean_num_pages = 0
-input_error = False
+    clean_num_pages = 0
+    input_error = False
 
-while True:
+    while True:
 
-    if input_error:
-        num_pages = input("Please enter a VALID number for total number of pages on your document (Greater than 0)")
-    else:
-        num_pages = input("Please enter total number of pages on your document. \n(Must be a number greater than 0):")
-
-    # Try and convert input to number and break if input is valid
-    try:
-        clean_num_pages = int(num_pages)
-        if clean_num_pages > 0:
-            input_error = False
-            break
+        if input_error:
+            num_pages = input("Please enter a VALID number for total number of pages on your document (Greater than 0)")
         else:
-            print("Please enter a valid number of pages (Greater than 0)")
-    except Exception as e:
-        input_error = True
-        print("Exception", e)
+            num_pages = input("Please enter total number of pages on your document. \n(Must be a number greater than 0):")
 
-# Compute and return results.
+        # Try and convert input to number and break if input is valid
+        try:
+            clean_num_pages = int(num_pages)
+            if clean_num_pages > 0:
+                input_error = False
+                break
+            else:
+                print("Please enter a valid number of pages (Greater than 0)")
+        except Exception as e:
+            input_error = True
+            print("Exception", e)
+
+    # Compute and return results.
+            
+    output_msgs_list = []
+    total_inclusive_pages = 0
+
+    if clean_num_pages < 4:
+        total_inclusive_pages = 4
+        num_blank_pages_to_add = 4 - clean_num_pages
+
+        output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
+        output_msgs_list.append(f"\nHaving done that, {get_page_layout_heading_string()}")
+        output_msgs_list.append(arrange_pages((total_inclusive_pages)))
+
+    elif clean_num_pages == 4 or clean_num_pages % 4 == 0:
+        output_msgs_list.append(get_page_layout_heading_string(True))
+        output_msgs_list.append(arrange_pages((clean_num_pages)))
+    else:
+        num_extra_pages = clean_num_pages % 4
+        num_blank_pages_to_add = 4 - num_extra_pages
+        total_inclusive_pages = clean_num_pages + num_blank_pages_to_add
+
+        output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
+        output_msgs_list.append(f"Having done that, {get_page_layout_heading_string()}")
+        output_msgs_list.append(arrange_pages((total_inclusive_pages)))
         
-output_msgs_list = []
-total_inclusive_pages = 0
 
-if clean_num_pages < 4:
-    total_inclusive_pages = 4
-    num_blank_pages_to_add = 4 - clean_num_pages
+    # Output result
+    for msg in output_msgs_list:
+        print(msg)
 
-    output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
-    output_msgs_list.append(f"\nHaving done that, {get_page_layout_heading_string()}")
-    output_msgs_list.append(arrange_pages((total_inclusive_pages)))
+main()
 
-elif clean_num_pages == 4 or clean_num_pages % 4 == 0:
-    output_msgs_list.append(get_page_layout_heading_string(True))
-    output_msgs_list.append(arrange_pages((clean_num_pages)))
-else:
-    num_extra_pages = clean_num_pages % 4
-    num_blank_pages_to_add = 4 - num_extra_pages
-    total_inclusive_pages = clean_num_pages + num_blank_pages_to_add
-
-    output_msgs_list.append(get_blank_pages_info_string(num_blank_pages_to_add))
-    output_msgs_list.append(f"Having done that, {get_page_layout_heading_string()}")
-    output_msgs_list.append(arrange_pages((total_inclusive_pages)))
-    
-
-# Output result
-for msg in output_msgs_list:
-    print(msg)
-
-
-input()
+# All user the ability to choose if they want to run the program again.
+while True:
+    rerun_main = input('Would you like to try another booklet? Enter "Y" for YES or "N" for NO:')
+    if rerun_main.lower() == "y":
+        main()
+    elif rerun_main.lower() == "n":
+        print("Program will automatically exit in 5 seconds.")
+        time.sleep(5)
+        break
+    else:
+        print("INVALID INPUT: Please try again.")
