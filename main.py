@@ -59,10 +59,8 @@ def arrange_pages(total_num_pages :int) -> str:
 
         if count % 2 == 0:
             arrangement_string += f"|> {pages_list[-1]} <|> {pages_list[0]} <|\n"
-            print(pages_list[-1], pages_list[0])
         else:
             arrangement_string += f"|> {pages_list[0]} <|> {pages_list[-1]} <|\n"
-            print(pages_list[0], pages_list[-1])
 
         pages_list.remove(pages_list[0])
         pages_list.remove(pages_list[-1])
