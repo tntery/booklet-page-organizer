@@ -3,6 +3,8 @@ A commandline Python script to help graphic designers with arranging pages of a
 booklet so they can be printed with backing and adjacent pages in the right 
 booklet order.
 
+![screenshot of results presentation](./screenshots/Booklet-Page-Organizer-Screenshot.png)
+
 # Why Booklet Page Organizer
 Having a background experience in printing and publishing, I noticed coworkers cut 
 multiple pieces of paper to make a prototype booklet in order to be able to get the 

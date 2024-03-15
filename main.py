@@ -56,7 +56,12 @@ def arrange_pages(total_num_pages :int) -> str:
     count = 0
 
     while len(pages_list) > 0:
-        arrangement_string += f"|> {pages_list[0]} <|> {pages_list[-1]} <|\n"
+
+        if count % 2 == 0:
+            arrangement_string += f"|> {pages_list[-1]} <|> {pages_list[0]} <|\n"
+        else:
+            arrangement_string += f"|> {pages_list[0]} <|> {pages_list[-1]} <|\n"
+
         pages_list.remove(pages_list[0])
         pages_list.remove(pages_list[-1])
         count += 1
@@ -132,8 +137,8 @@ while True:
     if rerun_main.lower() == "y":
         main()
     elif rerun_main.lower() == "n":
-        print("Program will automatically exit in 5 seconds.")
-        time.sleep(5)
+        print("Program will automatically exit in 3 seconds.")
+        time.sleep(3)
         break
     else:
         print("INVALID INPUT: Please try again.")
